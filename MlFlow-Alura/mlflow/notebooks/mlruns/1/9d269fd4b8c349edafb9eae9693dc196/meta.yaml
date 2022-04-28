@@ -1,0 +1,15 @@
+artifact_uri: file:///home/weslley/Desktop/MLEngineer-Studies/MlFlow-Alura/mlflow/notebooks/mlruns/1/9d269fd4b8c349edafb9eae9693dc196/artifacts
+end_time: 1651104179846
+entry_point_name: ''
+experiment_id: '1'
+lifecycle_stage: active
+name: ''
+run_id: 9d269fd4b8c349edafb9eae9693dc196
+run_uuid: 9d269fd4b8c349edafb9eae9693dc196
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1651104176894
+status: 3
+tags: []
+user_id: weslley

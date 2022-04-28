@@ -32,3 +32,22 @@ Inicializando estrutura de projeto
 ```sh
 cookiecutter https://github.com/jcalvesoliveira/cookiecutter-ds-basic.git
 ```
+
+**Tracking - Rastreamento**
+```py
+# iniciar um projeto
+mlflow.set_experiment('ame_experiments')
+
+# Iniciar execução
+mlflow.start_run()
+
+# Iniciar tracking
+mlflow.sklearn.log_model(model, 'name_model')
+
+# Finalizar execução
+mlflow.end_run()
+
+# Iniciar execução como finalizacao sem especificar o end
+with mlflow.start_run():
+
+```
