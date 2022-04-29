@@ -51,3 +51,14 @@ mlflow.end_run()
 with mlflow.start_run():
 
 ```
+
+**Predict em CLI MLFlow**
+```sh
+mlflow models predict -m 'runs:/c7b551614b3948168e762214e896c2a7/model' -i 'data/processed/casas_X.csv' -t 'csv' -o 'precos2.csv' --env-manager=local
+```
+
+
+**Predict em API MLFlow**
+```sh
+mlflow models serve -m 'runs:/c7b551614b3948168e762214e896c2a7/model' -p 8000 --env-manager=local
+```
