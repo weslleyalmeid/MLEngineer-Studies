@@ -89,12 +89,18 @@ docker run -p 8000:8080 'house-prices'
 # rodando basilene com padroes do argparse
 python src/models/train_model_2.py
 
-# rodando modelo que será melhor que o anterior, registrado e mudando o stage para produção
-python src/models/train_model_2.py --learning-rate 0.3 --max-depth 5
-python src/models/train_model_2.py --learning-rate 0.3 --max-depth 4
+# vinculando rota com o artifact salvos, porta default 5000
+mlflow server --backend-store-uri sqlite:///mlflow_2.db --default-artifact-root ./artifacts --host 0.0.0.0
+mlflow server --backend-store-uri sqlite:///mlflow_2.db --default-artifact-root ./artifacts --host 0.0.0.0:8000
 
-mlflow server --backend-store-uri sqlite:///mlflow.db --default-artifact-root ./astifacts --host 0.0.0.0
+# rodando modelo que será melhor que o anterior, registrado e mudando o stage para produção
+python src/models/train_model_2.py
+python src/models/train_model_2.py --learning-rate 0.3 --max-depth 5
+python src/models/train_model_2.py --learning-rate 0.5 --max-depth 4
+python src/models/train_model_2.py --learning-rate 0.3 --max-depth 6
+python src/models/train_model_2.py --learning-rate 0.3 --max-depth 4
 
 # matar conexao
 sudo fuser -k 5000/tcp
+sudo fuser -k 8000/tcp
 ```

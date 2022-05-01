@@ -46,7 +46,7 @@ dtest = xgboost.DMatrix(X_test, label=y_test)
 def upgrade_stage(mse, rmse, r2, uri, name_registry, name_experiment):
     # pegar uri, name e name_experimento na main
 
-    # aqio pega o modelo ja no tracking
+    # aqui pega o modelo ja no tracking
     client = mlflow.tracking.MlflowClient(tracking_uri=uri)
 
     # pegar o id do experimento por nome do projeto
@@ -91,7 +91,7 @@ def main():
     }
 
     name_experiment = 'house-prices-test'
-    uri = 'http://127.0.0.1:5000'
+    uri = 'http://127.0.0.1:8000'
     mlflow.set_tracking_uri(uri)
     mlflow.set_experiment(name_experiment)
     with mlflow.start_run():
@@ -124,7 +124,7 @@ def main():
 
             # ipdb.set_trace()
 
-            version = client.get_latest_versions(name_registry)[0]
+            version = client.get_latest_versions(name_registry)[-1]
             current_version = version.version
 
             # ipdb.set_trace()
