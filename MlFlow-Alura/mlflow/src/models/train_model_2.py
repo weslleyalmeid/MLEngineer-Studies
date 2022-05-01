@@ -54,6 +54,8 @@ def upgrade_stage(mse, rmse, r2, uri, name_registry, name_experiment):
 
     for mv in client.search_model_versions(f"name='{name_registry}'"):
 
+        ipdb.set_trace()
+
         if mv.current_stage == 'Production':
             ipdb.set_trace()
             # pegar o id de execucao do experimento que esta em producao
@@ -62,9 +64,10 @@ def upgrade_stage(mse, rmse, r2, uri, name_registry, name_experiment):
             runs = mlflow.search_runs(experiment_ids=id_experiment)
             df_experiment = runs[runs['run_id'] == id_run]         
 
-            mse_old = df_experiment['metrics.mse']
-            rmse_old = df_experiment['metrics.rmse']
-            r2_old = df_experiment['metrics.r2']
+            ipdb.set_trace()
+            mse_old = float(df_experiment['metrics.mse'].values)
+            rmse_old = float(df_experiment['metrics.rmse'].values)
+            r2_old = float(df_experiment['metrics.r2'].values)
 
             ipdb.set_trace()
 
@@ -73,8 +76,8 @@ def upgrade_stage(mse, rmse, r2, uri, name_registry, name_experiment):
             else:
                 return None
         
-        else:
-            return 'Production'
+        
+    return 'Production'
 
 
 

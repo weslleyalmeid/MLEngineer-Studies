@@ -90,7 +90,7 @@ docker run -p 8000:8080 'house-prices'
 python src/models/train_model_2.py
 
 # rodando modelo que será melhor que o anterior, registrado e mudando o stage para produção
-python src/models/train_model_2.py --learning-rate 0.3 --max-depth 6
+python src/models/train_model_2.py --learning-rate 0.3 --max-depth 5
 
 mlflow server --backend-store-uri sqlite:///mlflow.db --default-artifact-root ./artifacts --host 0.0.0.0
 
