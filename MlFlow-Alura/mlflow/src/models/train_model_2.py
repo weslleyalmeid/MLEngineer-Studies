@@ -54,22 +54,22 @@ def upgrade_stage(mse, rmse, r2, uri, name_registry, name_experiment):
 
     for mv in client.search_model_versions(f"name='{name_registry}'"):
 
-        ipdb.set_trace()
+        # ipdb.set_trace()
 
         if mv.current_stage == 'Production':
-            ipdb.set_trace()
+            # ipdb.set_trace()
             # pegar o id de execucao do experimento que esta em producao
             id_run = mv.run_id
             # runs vai receber um dataframe com os valores do experimento para todos os experimentos
             runs = mlflow.search_runs(experiment_ids=id_experiment)
             df_experiment = runs[runs['run_id'] == id_run]         
 
-            ipdb.set_trace()
+            # ipdb.set_trace()
             mse_old = float(df_experiment['metrics.mse'].values)
             rmse_old = float(df_experiment['metrics.rmse'].values)
             r2_old = float(df_experiment['metrics.r2'].values)
 
-            ipdb.set_trace()
+            # ipdb.set_trace()
 
             if mse < mse_old and rmse < rmse_old and r2 > r2_old:
                 return 'Production'
@@ -117,21 +117,22 @@ def main():
             registered_model_name=name_registry,
         )
 
-        ipdb.set_trace()
+        # ipdb.set_trace()
         promoved = upgrade_stage(mse, rmse, r2, uri, name_registry, name_experiment)
         if promoved:
             client = mlflow.tracking.MlflowClient(tracking_uri=uri)
 
-            ipdb.set_trace()
+            # ipdb.set_trace()
 
             version = client.get_latest_versions(name_registry)[0]
             current_version = version.version
 
-            ipdb.set_trace()
+            # ipdb.set_trace()
             client.transition_model_version_stage(
                 name=name_registry,
                 version=current_version,
-                stage="Production"
+                stage="Production",
+                archive_existing_versions=True
             )
 
 
