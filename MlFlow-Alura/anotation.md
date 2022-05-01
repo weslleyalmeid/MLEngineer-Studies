@@ -78,7 +78,22 @@ mlflow models serve -m 'models:/House Prices/Production' -p 8000 --env-manager=l
 ```
 
 **Docker**
-```
+```sh
 mlflow models build-docker -m 'models:/House Prices/Production' -n 'house-prices'
 docker run -p 8000:8080 'house-prices'
+```
+
+### Model Registry e Stage
+```sh
+# path: mlflow
+# rodando basilene com padroes do argparse
+python src/models/train_model_2.py
+
+# rodando modelo que será melhor que o anterior, registrado e mudando o stage para produção
+python src/models/train_model_2.py --learning-rate 0.3 --max-depth 6
+
+mlflow server --backend-store-uri sqlite:///mlflow.db --default-artifact-root ./artifacts --host 0.0.0.0
+
+# matar conexao
+sudo fuser -k 5000/tcp
 ```
