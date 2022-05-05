@@ -49,4 +49,4 @@ def cotacao():
 
 
 # para escutar chamada em todos os ambientes docker, cloud e local
-app.run(debug=True, host='0.0.0.0')
+app.run(debug=False, host='0.0.0.0')
