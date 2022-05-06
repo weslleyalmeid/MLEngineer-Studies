@@ -3,7 +3,7 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,virtualenv,visualstudiocode,compressedarchive
 
 ### CompressedArchive ###
-
+env_vars.yaml
 ### Mostly from https://en.wikipedia.org/wiki/List_of_archive_formats
 
 ## Archiving and compression
