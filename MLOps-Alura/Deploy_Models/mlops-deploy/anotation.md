@@ -94,3 +94,89 @@ docker push gcr.io/mlops-alura-349223/ml-api
 - Escolher nome e selecionar imagem docker
 - mudar a porta de acordo com docker no caso 5000
 ```
+
+#### 3 - CI com Github Actions
+
+1. Ativar *Cloud Build API*
+
+2. Criar Service account
+```md
+- IAM & ADM > Service Accounts
+- Adicionar Roles baseado nesse [artigo](https://towardsdatascience.com/deploy-to-google-cloud-run-using-github-actions-590ecf957af0) visando reduzir o máximo e deixar o mais seguro possível
+- Ir no service do id_project > actions > manage keys > add key > select json
+- vincular key no secrets do github
+```
+
+3. Criar secrets necessárias no github
+```
+repo > settings > secrets > actions > new repo secrets
+
+- BASIC_AUTH_PASSWORD
+- BASIC_AUTH_USERNAME
+- GCP_PROJECT
+- GCP_CREDENTIALS
+```
+
+4. Criar arquivo [cloud-run.yaml](https://github.com/google-github-actions/setup-gcloud/tree/main/example-workflows/cloud-ru)]
+
+```yaml
+on:
+  push:
+    branches:
+    - main
+
+name: Build and Deploy to Cloud Run
+env:
+  PROJECT_ID: ${{ secrets.GCP_PROJECT }}
+  SERVICE: ml-api
+  REGION: us-central1
+  BASIC_AUTH_USERNAME: ${{ secrets.BASIC_AUTH_USERNAME }}
+  BASIC_AUTH_PASSWORD: ${{ secrets.BASIC_AUTH_PASSWORD }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    # Add "id-token" with the intended permissions.
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    # Configure Workload Identity Federation and generate an access token.
+    # - id: 'auth'
+    #   name: 'Authenticate to Google Cloud'
+    #   uses: 'google-github-actions/auth@v0'
+    #   with:
+    #     workload_identity_provider: 'projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
+    #     service_account: 'my-service-account@my-project.iam.gserviceaccount.com'
+
+    Alternative option - authentication via credentials json
+    - id: 'auth'
+      uses: 'google-github-actions/auth@v0'
+      with:
+        credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+
+    # Setup gcloud CLI
+    - name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v0
+
+    - name: Authorize Docker push
+      run: gcloud auth configure-docker
+
+    - name: Build and Push Container
+      run: |-
+        docker build -t gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{  github.sha }} --build-arg BASIC_AUTH_USERNAME_ARG=${{BASIC_AUTH_USERNAME}} --build-arg BASIC_AUTH_PASSWORD_ARG=${{BASIC_AUTH_PASSWORD}} .
+        docker push gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{  github.sha }}
+    - name: Deploy to Cloud Run
+      run: |-
+        gcloud run deploy ${{ env.SERVICE }} \
+          --region ${{ env.REGION }} \
+          --image gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{  github.sha }} \
+          --platform "managed" \
+          --port 5000 \
+          --quiet
+```
