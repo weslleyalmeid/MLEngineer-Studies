@@ -180,3 +180,10 @@ jobs:
           --port 5000 \
           --quiet
 ```
+
+5. Push na branch *main*
+```sh
+git add .
+git commit -m 'message'
+git push origin main
+```
