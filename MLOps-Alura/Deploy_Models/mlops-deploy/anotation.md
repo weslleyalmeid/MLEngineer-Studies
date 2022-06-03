@@ -78,7 +78,7 @@ docker container run -p 5000:5000 ml-api
 
 4. Configuração do G-Cloud Docker
 ```sh
-gcloud auth congfigure-docker
+gcloud auth configure-docker
 
 # adicionar tag que sera o caminho no container registry
 # docker tag name_image grc.io/id_project/name_image
