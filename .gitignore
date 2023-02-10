@@ -2,6 +2,8 @@
 # Created by https://www.toptal.com/developers/gitignore/api/python,virtualenv,visualstudiocode,compressedarchive
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,virtualenv,visualstudiocode,compressedarchive
 
+mlops-zoomcamp/*/data/
+
 ### CompressedArchive ###
 env_vars.yaml
 ### Mostly from https://en.wikipedia.org/wiki/List_of_archive_formats
