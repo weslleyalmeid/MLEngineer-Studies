@@ -3,6 +3,21 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,virtualenv,visualstudiocode,compressedarchive
 
 mlops-zoomcamp/*/data/
+data/
+.ipynb_checkpoints
+.bin
+*.db
+
+*.parquet
+*.html
+*.csv
+
+.venv
+venv
+.idea
+**/artifacts/
+**/models/
+
 
 ### CompressedArchive ###
 env_vars.yaml
