@@ -79,7 +79,6 @@ def run_register_model(data_path: str, top_n: int):
         order_by=["metrics.test_rmse ASC"]
     )[0]
     
-    import ipdb; ipdb.set_trace()
     # Register the best model
     RUN_ID = best_run.info.run_id
     mlflow.register_model(
