@@ -19,7 +19,7 @@ def run_train():
     config = wandb.config
 
     # Fetch the latest version of the dataset artifact 
-    artifact = wandb.use_artifact('geekyrakshit/mlops-zoomcamp-wandb/Titanic:latest', type='dataset')
+    artifact = wandb.use_artifact('weslleyalmeid/mlops-zoomcamp-wandb/Titanic:latest', type='dataset')
     artifact_dir = artifact.download()
 
     # Read the files
