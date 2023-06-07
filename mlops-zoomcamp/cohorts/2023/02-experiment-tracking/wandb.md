@@ -19,6 +19,8 @@ Once you installed the package, run the command `wandb --version` and check the 
 
 What's the version that you have?
 
+**wandb, version 0.15.3**
+
 # Q2. Download and preprocess the data
 
 We'll use the Green Taxi Trip Records dataset to predict the amount of tips for each trip. 
@@ -38,9 +40,9 @@ Your task is to download the datasets and then execute this command:
 
 ```bash
 python preprocess_data.py \
-  --wandb_project <WANDB_PROJECT_NAME> \
-  --wandb_entity <WANDB_USERNAME> \
-  --raw_data_path <TAXI_DATA_FOLDER> \
+  --wandb_project wb_homework\
+  --wandb_entity weslleyalmeid \
+  --raw_data_path ./data \
   --dest_path ./output
 ```
 
@@ -49,7 +51,7 @@ Tip: go to `02-experiment-tracking/homework-wandb/` folder before executing the 
 Once you navigate to the `Files` tab of your artifact on your Weights & Biases page, what's the size of the saved `DictVectorizer` file?
 
 * 54 kB
-* 154 kB
+* **154 kB**
 * 54 MB
 * 154 MB
 
@@ -77,9 +79,9 @@ You can run the script using:
 
 ```bash
 python train.py \
-  --wandb_project <WANDB_PROJECT_NAME> \
-  --wandb_entity <WANDB_USERNAME> \
-  --data_artifact "<WANDB_USERNAME>/<WANDB_PROJECT_NAME>/NYC-Taxi:v0"
+  --wandb_project wb_homework\
+  --wandb_entity weslleyalmeid \
+  --data_artifact "weslleyalmeid/wb_homework/NYC-Taxi:v0"
 ```
 
 Tip 1: You can find the artifact address under the `Usage` tab in the respective artifact's page.
@@ -91,7 +93,7 @@ Once you have successfully ran the script, navigate the `Overview` section of th
 * 4
 * 6
 * 8
-* 10
+* **10**
 
 # Q4. Tune model hyperparameters
 
@@ -101,14 +103,14 @@ Your task is to modify `sweep.py` to pass the parameters `n_estimators`, `min_sa
 
 ```bash
 python sweep.py \
-  --wandb_project <WANDB_PROJECT_NAME> \
-  --wandb_entity <WANDB_USERNAME> \
-  --data_artifact "<WANDB_PROJECT_NAME>/<WANDB_USERNAME>/NYC-Taxi:v0"
+  --wandb_project wb_homework \
+  --wandb_entity weslleyalmeid \
+  --data_artifact "weslleyalmeid/wb_homework/NYC-Taxi:v0"
 ```
 
 This command will run the sweep for 5 iterations using the **Bayesian Optimization and HyperBand** method proposed by the paper [BOHB: Robust and Efficient Hyperparameter Optimization at Scale](https://arxiv.org/abs/1807.01774). You can take a look at the sweep on your Weights & Biases dashboard, take a look at the **Parameter Inportance Panel** and the **Parallel Coordinates Plot** to determine, and analyze which hyperparameter is the most important:
 
-* `max_depth`
+* **`max_depth`**
 * `n_estimators`
 * `min_samples_split`
 * `min_samples_leaf`
@@ -128,7 +130,7 @@ Now that the model artifact is linked to the Registered Model, which of these in
 * Aliases
 * Metric (MSE)
 * Source run
-* All of these
+* **All of these**
 * None of these
 
 ## Submit the results
