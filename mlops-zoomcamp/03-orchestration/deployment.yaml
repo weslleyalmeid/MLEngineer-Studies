@@ -1,13 +1,10 @@
 deployments:
-- name: null
-  version: null
-  tags: []
-  description: null
-  schedule: {}
-  flow_name: null
-  entrypoint: null
-  parameters: {}
-  work_pool:
-    name: null
-    work_queue_name: null
-    job_variables: {}
+- name: taxi_local_data
+  entrypoint: /home/wa/PROJETOS/MLEngineer-Studies/mlops-zoomcamp/03-orchestration/3.4/orchestrate.py
+  work_pool: 
+    name: zoompool
+
+# - name: taxi_s3_data
+#   entrypoint: 3.5/orchestrate.py:main_flow_s3
+#   work_pool: 
+#     name: zoompool
