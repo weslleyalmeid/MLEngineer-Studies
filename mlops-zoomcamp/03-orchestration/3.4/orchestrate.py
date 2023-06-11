@@ -11,21 +11,9 @@ import xgboost as xgb
 from prefect import flow, task
 import os
 
-# ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
-# ZOO_PATH = os.path.join(ROOT_PATH, "mlops-zoomcamp")
-# PROJ_DIR = os.path.join(ZOO_PATH, "03-orchestration", "3.4")
-
-
-PROJ_DIR = os.path.abspath(__file__)
-
 @task(retries=3, retry_delay_seconds=2)
 def read_data(filename: str) -> pd.DataFrame:
-    """Read data into DataFrame"""
-    ZOO_PATH = os.path.dirname(os.path.abspath(__file__))
-    PROJ_DIR = os.path.join(ZOO_PATH, "03-orchestration", "3.4")
-    print(ZOO_PATH)
-    print(PROJ_DIR)
-    
+    """Read data into DataFrame"""   
     df = pd.read_parquet(filename)
 
     df.lpep_dropoff_datetime = pd.to_datetime(df.lpep_dropoff_datetime)
@@ -123,8 +111,8 @@ def train_best_model(
 
 @flow
 def main_flow(
-    train_path: str = os.path.join(PROJ_DIR, "data_pref/green_tripdata_2021-01.parquet"),
-    val_path: str = os.path.join(PROJ_DIR, "data_pref/green_tripdata_2021-02.parquet"),
+    train_path: str = "./data_pref/green_tripdata_2021-01.parquet",
+    val_path: str = "./data_pref/green_tripdata_2021-02.parquet",
 ) -> None:
     """The main training pipeline"""
 
