@@ -11,41 +11,45 @@ import xgboost as xgb
 from prefect import flow, task
 import os
 
-@task
-def read_path():
-    """Read pathse"""   
-    ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-    print(ROOT_DIR)
-    DATA_DIR = os.path.join(ROOT_DIR, 'data_pref')
-    print(DATA_DIR)
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR = os.path.join(ROOT_DIR, 'data_pref')
 
-    arquivos = os.listdir(DATA_DIR)
+# @task
+# def read_path():
+#     """Read pathse"""   
 
-    # Imprime o nome de cada arquivo
-    for arquivo in arquivos:
-        print(arquivo)
+#     ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+#     print(ROOT_DIR)
+#     DATA_DIR = os.path.join(ROOT_DIR, 'data_pref')
+#     print(DATA_DIR)
+    
+#     arquivos = os.listdir(DATA_DIR)
+
+#     # Imprime o nome de cada arquivo
+#     for arquivo in arquivos:
+#         print(arquivo)
 
 
 
 
 
-# @task(retries=3, retry_delay_seconds=2)
-# def read_data(filename: str) -> pd.DataFrame:
-#     """Read data into DataFrame"""   
-#     df = pd.read_parquet(filename)
+@task(retries=3, retry_delay_seconds=2)
+def read_data(filename: str) -> pd.DataFrame:
+    """Read data into DataFrame"""   
+    df = pd.read_parquet(filename)
 
-#     df.lpep_dropoff_datetime = pd.to_datetime(df.lpep_dropoff_datetime)
-#     df.lpep_pickup_datetime = pd.to_datetime(df.lpep_pickup_datetime)
+    df.lpep_dropoff_datetime = pd.to_datetime(df.lpep_dropoff_datetime)
+    df.lpep_pickup_datetime = pd.to_datetime(df.lpep_pickup_datetime)
 
-#     df["duration"] = df.lpep_dropoff_datetime - df.lpep_pickup_datetime
-#     df.duration = df.duration.apply(lambda td: td.total_seconds() / 60)
+    df["duration"] = df.lpep_dropoff_datetime - df.lpep_pickup_datetime
+    df.duration = df.duration.apply(lambda td: td.total_seconds() / 60)
 
-#     df = df[(df.duration >= 1) & (df.duration <= 60)]
+    df = df[(df.duration >= 1) & (df.duration <= 60)]
 
-#     categorical = ["PULocationID", "DOLocationID"]
-#     df[categorical] = df[categorical].astype(str)
+    categorical = ["PULocationID", "DOLocationID"]
+    df[categorical] = df[categorical].astype(str)
 
-#     return df
+    return df
 
 
 # @task
@@ -127,30 +131,29 @@ def read_path():
 #     return None
 
 
-# @flow
-# def main_flow(
-#     train_path: str = "./data_pref/green_tripdata_2021-01.parquet",
-#     val_path: str = "./data_pref/green_tripdata_2021-02.parquet",
-# ) -> None:
-#     """The main training pipeline"""
-
-#     # MLflow settings
-#     mlflow.set_tracking_uri("sqlite:///mlflow.db")
-#     mlflow.set_experiment("nyc-taxi-experiment")
-
-#     # Load
-#     df_train = read_data(train_path)
-#     df_val = read_data(val_path)
-
-#     # Transform
-#     X_train, X_val, y_train, y_val, dv = add_features(df_train, df_val)
-
-#     # Train
-#     train_best_model(X_train, X_val, y_train, y_val, dv)
-
 @flow
-def main_flow():
-    read_path()
+def main_flow(
+    train_path: str = os.path.join(DATA_DIR, "green_tripdata_2021-01.parquet"),
+    val_path: str = os.path.join(DATA_DIR, "green_tripdata_2021-02.parquet"),
+) -> None:
+    """The main training pipeline"""
+
+    # MLflow settings
+    # mlflow.set_tracking_uri("sqlite:///mlflow.db")
+    # mlflow.set_experiment("nyc-taxi-experiment")
+
+    # Load
+    df_train = read_data(train_path)
+    df_val = read_data(val_path)
+
+    df_train.head()
+
+    # # Transform
+    # X_train, X_val, y_train, y_val, dv = add_features(df_train, df_val)
+
+    # # Train
+    # train_best_model(X_train, X_val, y_train, y_val, dv)
+
 
 if __name__ == "__main__":
     main_flow()
