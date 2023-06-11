@@ -14,10 +14,19 @@ import os
 @task
 def read_path():
     """Read pathse"""   
-    CURRENT_PATH = os.path.abspath(__file__)
-    print(CURRENT_PATH)
-    ROOT_DIR = os.path.dirname(CURRENT_PATH)
+    ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
     print(ROOT_DIR)
+    DATA_DIR = os.path.join(ROOT_DIR, 'data_pref')
+    print(DATA_DIR)
+
+    arquivos = os.listdir(DATA_DIR)
+
+    # Imprime o nome de cada arquivo
+    for arquivo in arquivos:
+        print(arquivo)
+
+
+
 
 
 # @task(retries=3, retry_delay_seconds=2)
