@@ -12,10 +12,24 @@ from prefect import flow, task
 from prefect.artifacts import create_markdown_artifact
 import os.path
 from datetime import date
+from prefect_email import EmailServerCredentials, email_send_message
+from typing import List
 
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(ROOT_DIR, 'data_pref')
+
+@task
+def example_email_send_message_flow(email_addresses: List[str]):
+    # get credentials in personal block
+    email_server_credentials = EmailServerCredentials.load("email")
+    for email_address in email_addresses:
+        subject = email_send_message.with_options(name=f"email {email_address}").submit(
+            email_server_credentials=email_server_credentials,
+            subject="Example Flow Notification using Gmail",
+            msg="This proves email_send_message works!",
+            email_to=email_address,
+        )
 
 @task(retries=3, retry_delay_seconds=2, name="Read taxi data")
 def read_data(filename: str) -> pd.DataFrame:
@@ -153,6 +167,9 @@ def main_flow(
 
     # Train
     train_best_model(X_train, X_val, y_train, y_val, dv)
+
+    # send email
+    # example_email_send_message_flow(['insert email list'])
 
 
 if __name__ == "__main__":
