@@ -15,6 +15,7 @@ data/
 
 !/mlops-zoomcamp/03-orchestration/3.4/data_pref/green_tripdata_2021-01.parquet
 !/mlops-zoomcamp/03-orchestration/3.4/data_pref/green_tripdata_2021-02.parquet
+!/mlops-zoomcamp/03-orchestration/3.4/data_pref/*.parquet
 
 .venv
 venv
