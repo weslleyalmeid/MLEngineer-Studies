@@ -3,12 +3,23 @@ import pickle
 
 import mlflow
 from flask import Flask, request, jsonify
+from dotenv import load_dotenv
 
+# Carregar as variáveis de ambiente do arquivo .secrets
+load_dotenv('.secrets')
 
 RUN_ID = os.getenv('RUN_ID')
 
-logged_model = f's3://mlflow-models-alexey/1/{RUN_ID}/artifacts/model'
+logged_model = f's3://mlflow-models/1/{RUN_ID}/artifacts/model'
 # logged_model = f'runs:/{RUN_ID}/model'
+
+# Definir a configuração do backend store do MLflow
+os.environ['MLFLOW_S3_ENDPOINT_URL'] = os.getenv('minio_endpoint_url')
+os.environ['AWS_ACCESS_KEY_ID'] = os.getenv('minio_access_key')
+os.environ['AWS_SECRET_ACCESS_KEY'] = os.getenv('minio_secret_key')
+# os.environ['MLFLOW_S3_IGNORE_TLS'] = 'true'
+# os.environ['MLFLOW_TRACKING_URI'] = os.getenv('minio_bucket_name')
+
 model = mlflow.pyfunc.load_model(logged_model)
 
 
@@ -43,4 +54,4 @@ def predict_endpoint():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0', port=9696)
+    app.run(debug=True, host='0.0.0.0', port=9697)
