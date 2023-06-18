@@ -12,6 +12,8 @@ RUN pip install -r requirements.txt
 # RUN pipenv install --system --deploy
 
 COPY starter.py ./
+
+# DANGEROUS, only local test
 COPY .secretss ./.secrets
 
 RUN mkdir output
