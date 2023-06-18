@@ -57,6 +57,9 @@ except:
     log.info(os.environ['AWS_ACCESS_KEY_ID'])
     log.info(os.environ['AWS_SECRET_ACCESS_KEY'])
 
+log.info(os.environ['MLFLOW_S3_ENDPOINT_URL'])
+log.info(os.environ['AWS_ACCESS_KEY_ID'])
+log.info(os.environ['AWS_SECRET_ACCESS_KEY'])
 
 # Criação do cliente S3 apontando para o MinIO
 s3_client = boto3.client('s3',
@@ -126,19 +129,19 @@ def save_results(df: pd.DataFrame, y_pred: np.array, output_file: str, cloud: bo
     df_result = pd.DataFrame()
     df_result['ride_id'] = df['ride_id']
     df_result['predicted_duration'] = y_pred
-    df_result.to_parquet(output_file, index=False)
+    
 
     if cloud:
         logging.info(f'Save CLOUD')
 
+        parquet_data = df_result.to_parquet(index=False)
         s3_parts = output_file[5:].split('/', 1)
         bucket_name = s3_parts[0]
         file_name = s3_parts[1]
 
         s3_client.put_object(Body=parquet_data, Bucket=bucket_name, Key=file_name)
     else:
-        parquet_data = df_result.to_parquet(index=False)
-    # Extract bucket and object key from S3 URL
+        df_result.to_parquet(output_file, index=False)
 
 
 

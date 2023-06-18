@@ -30,4 +30,11 @@ aws s3 cp ./ s3://test-minio/ --endpoint-url http://localhost:9000 --recursive -
 
 # pipenv
 pipenv install scikit-learn==1.0.2 flask --python=3.9
+
+
+docker build -t ride-duration-prediction:v1 .
+docker run -it --rm ride-duration-prediction:v1
+
+docker build --build-arg SECRETS_FILE=.secrets -t ride-duration-prediction:v1 .
+docker run -it --rm -p 9000:9000 -p 9001:9001 ride-duration-prediction:v1
 ```
