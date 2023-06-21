@@ -31,6 +31,7 @@ def prep_db():
 		with psycopg.connect("host=localhost port=5432 dbname=test user=postgres password=example") as conn:
 			conn.execute(create_table_statement)
 
+
 def calculate_dummy_metrics_postgresql(curr):
 	value1 = rand.randint(0, 1000)
 	value2 = str(uuid.uuid4())
@@ -38,8 +39,9 @@ def calculate_dummy_metrics_postgresql(curr):
 
 	curr.execute(
 		"insert into dummy_metrics(timestamp, value1, value2, value3) values (%s, %s, %s, %s)",
-		(datetime.datetime.now(pytz.timezone('Europe/London')), value1, value2, value3)
+		(datetime.datetime.now(pytz.timezone('America/Sao_Paulo')), value1, value2, value3)
 	)
+
 
 def main():
 	prep_db()
@@ -56,6 +58,7 @@ def main():
 			while last_send < new_send:
 				last_send = last_send + datetime.timedelta(seconds=10)
 			logging.info("data sent")
+
 
 if __name__ == '__main__':
 	main()
