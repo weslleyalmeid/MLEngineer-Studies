@@ -13,6 +13,25 @@ Links
 
 ## Code snippets
 
+### Create roles and enable
+
+**Create new police**
+
+- IAM
+- Create new police
+- select kinesis
+- configure PutRecord and PutRecords
+- add arn
+- policy name **lambda_kinesis_write_to_ride_predictions**
+- create
+
+**Enable new role**
+
+- IAM
+- role
+- select policy  **lambda_kinesis_write_to_ride_predictions**
+- attach role
+
 ### Sending data
 
 
@@ -109,7 +128,7 @@ echo ${RESULT} | jq -r '.Records[0].Data' | base64 --decode
 
 ```bash
 export PREDICTIONS_STREAM_NAME="ride_predictions"
-export RUN_ID="e1efc53e9bd149078b0c12aeaa6365df"
+export RUN_ID="3bdf3831eac4453591e615658d3eacd1"
 export TEST_RUN="True"
 
 python test.py
@@ -123,9 +142,11 @@ docker build -t stream-model-duration:v1 .
 docker run -it --rm \
     -p 8080:8080 \
     -e PREDICTIONS_STREAM_NAME="ride_predictions" \
-    -e RUN_ID="e1efc53e9bd149078b0c12aeaa6365df" \
+    -e RUN_ID="3bdf3831eac4453591e615658d3eacd1" \
     -e TEST_RUN="True" \
-    -e AWS_DEFAULT_REGION="eu-west-1" \
+    -e AWS_DEFAULT_REGION="us-east-1" \
+    -e AWS_ACCESS_KEY_ID="${aws_access_key}" \
+    -e AWS_SECRET_ACCESS_KEY="${aws_secret_key}" \
     stream-model-duration:v1
 ```
 
@@ -143,7 +164,7 @@ To use AWS CLI, you may need to set the env variables:
 docker run -it --rm \
     -p 8080:8080 \
     -e PREDICTIONS_STREAM_NAME="ride_predictions" \
-    -e RUN_ID="e1efc53e9bd149078b0c12aeaa6365df" \
+    -e RUN_ID="3bdf3831eac4453591e615658d3eacd1" \
     -e TEST_RUN="True" \
     -e AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID}" \
     -e AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}" \
@@ -157,7 +178,7 @@ Alternatively, you can mount the `.aws` folder with your credentials to the `.aw
 docker run -it --rm \
     -p 8080:8080 \
     -e PREDICTIONS_STREAM_NAME="ride_predictions" \
-    -e RUN_ID="e1efc53e9bd149078b0c12aeaa6365df" \
+    -e RUN_ID="3bdf3831eac4453591e615658d3eacd1" \
     -e TEST_RUN="True" \
     -v c:/Users/alexe/.aws:/root/.aws \
     stream-model-duration:v1
@@ -174,13 +195,27 @@ aws ecr create-repository --repository-name duration-model
 Logging in
 
 ```bash
-$(aws ecr get-login --no-include-email)
+$(aws ecr get-login-password --no-include-email)
+```
+
+```bash
+# aws ecr get-login-password \
+#     --region <region> \
+# | docker login \
+#     --username AWS \
+#     --password-stdin <aws_account_id>.dkr.ecr.<region>.amazonaws.com
+
+aws ecr get-login-password \
+    --region us-east-1 \
+| docker login \
+    --username AWS \
+    --password-stdin 923138830706.dkr.ecr.us-east-1.amazonaws.com
 ```
 
 Pushing 
 
 ```bash
-REMOTE_URI="387546586013.dkr.ecr.eu-west-1.amazonaws.com/duration-model"
+REMOTE_URI="923138830706.dkr.ecr.us-east-1.amazonaws.com/duration-model"
 REMOTE_TAG="v1"
 REMOTE_IMAGE=${REMOTE_URI}:${REMOTE_TAG}
 

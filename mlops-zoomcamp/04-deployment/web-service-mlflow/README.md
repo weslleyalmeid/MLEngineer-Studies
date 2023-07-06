@@ -19,7 +19,7 @@ export MINIO_SECRET_KEY=minio_password
 
 mlflow server \
     --backend-store-uri=sqlite:///mlflow.db \
-    --default-artifact-root=s3://mlflow-models/
+    --default-artifact-root=s3://mlflow-weslley/
 ```
 
 ```
