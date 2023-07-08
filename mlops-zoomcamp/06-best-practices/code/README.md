@@ -16,6 +16,19 @@ docker run -it --rm \
     stream-model-duration:v2
 ```
 
+```sh
+
+docker run -it --rm \
+    -p 8080:8080 \
+    -e PREDICTIONS_STREAM_NAME="ride_predictions" \
+    -e RUN_ID="3bdf3831eac4453591e615658d3eacd1" \
+    -e TEST_RUN="True" \
+    -e AWS_DEFAULT_REGION="us-east-1" \
+    -e AWS_ACCESS_KEY_ID="${aws_access_key}" \
+    -e AWS_SECRET_ACCESS_KEY="${aws_secret_key}" \
+    stream-model-duration:v2
+```
+
 Mounting the model folder:
 
 ```
