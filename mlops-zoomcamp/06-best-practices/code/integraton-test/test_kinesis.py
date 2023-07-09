@@ -32,7 +32,6 @@ records_response = kinesis_client.get_records(
 records = records_response['Records']
 pprint(records)
 
-
 assert len(records) == 1
 
 

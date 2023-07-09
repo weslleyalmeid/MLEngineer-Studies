@@ -4,15 +4,18 @@ import base64
 
 import boto3
 import mlflow
+import logging 
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s]: %(message)s")
 
 
 def get_model_location(run_id):
     model_location = os.getenv('MODEL_LOCATION')
 
     if model_location is not None:
+        logging.info("model_location: OK")
         return model_location
 
-    # model_bucket = os.getenv('MODEL_BUCKET', 'mlflow-models-alexey')
     model_bucket = os.getenv('MODEL_BUCKET', 'mlflow-weslley')
     experiment_id = os.getenv('MLFLOW_EXPERIMENT_ID', '1')
 
@@ -69,6 +72,8 @@ class ModelService:
                 'version': self.model_version,
                 'prediction': {'ride_duration': prediction, 'ride_id': ride_id},
             }
+
+            logging.info(prediction_event)
 
             for callback in self.callbacks:
                 callback(prediction_event)
