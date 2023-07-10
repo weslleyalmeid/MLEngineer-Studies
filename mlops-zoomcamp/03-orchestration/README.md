@@ -80,6 +80,32 @@ Did you take notes? Add them here:
 
 * Send a PR, add your notes above this line
 
+```sh
+# start project
+prefect project init 
+
+# create worker via UI
+prefect worker start -p zoompool
+
+# set url in current repo
+prefect config set PREFECT_API_URL=http://127.0.0.1:4200/api
+
+# deploy with deployment.yaml
+prefect deploy --all
+
+# create worker
+prefect deploy absolute_path/current_folder/folder_file.py:name_function -n taxi1 -p name_worker
+# prefect deploy /home/wa/PROJETOS/MLEngineer-Studies/mlops-zoomcamp/03-orchestration/3.4/orchestrate.py:main_flow -n taxi1 -p zoompool
+
+# start worker 
+prefect worker start -p zoompool 
+
+
+prefect profile create test
+prefect profile use 'test' 
+prefect profile inspect test
+prefect profile ls
+```
 
 ### Notes 2022 Edition
 

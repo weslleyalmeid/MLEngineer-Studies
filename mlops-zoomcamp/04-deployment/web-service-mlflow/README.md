@@ -9,10 +9,25 @@
 Starting the MLflow server with S3:
 
 ```bash
+
+export MLFLOW_S3_ENDPOINT_URL=http://localhost:9000
+export AWS_ACCESS_KEY_ID=minio_user
+export AWS_SECRET_ACCESS_KEY=minio_password
+
+export MINIO_ACCESS_KEY=minio_user
+export MINIO_SECRET_KEY=minio_password
+
 mlflow server \
     --backend-store-uri=sqlite:///mlflow.db \
-    --default-artifact-root=s3://mlflow-models-alexey/
+    --default-artifact-root=s3://mlflow-weslley/
 ```
+
+```
+ln -s ~/PROJETOS/MLEngineer-Studies/mlops-zoomcamp/data ./data
+```
+
+
+
 
 Downloading the artifact
 

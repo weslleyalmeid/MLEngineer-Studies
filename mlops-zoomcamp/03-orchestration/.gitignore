@@ -6,3 +6,6 @@ mlruns/*
 ./DS_Store
 *.db
 *.DS_Store
+!/3.4/data_pref/green_tripdata_2021-01.parquet
+!/3.4/data_pref/green_tripdata_2021-02.parquet
+!/3.4/data_pref/*.parquet

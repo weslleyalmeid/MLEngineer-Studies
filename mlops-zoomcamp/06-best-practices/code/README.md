@@ -16,22 +16,39 @@ docker run -it --rm \
     stream-model-duration:v2
 ```
 
+```sh
+docker run -it --rm \
+    -p 8080:8080 \
+    -e PREDICTIONS_STREAM_NAME="ride_predictions" \
+    -e RUN_ID="3bdf3831eac4453591e615658d3eacd1" \
+    -e TEST_RUN="True" \
+    -e AWS_DEFAULT_REGION="us-east-1" \
+    -e AWS_ACCESS_KEY_ID="${aws_access_key}" \
+    -e AWS_SECRET_ACCESS_KEY="${aws_secret_key}" \
+    stream-model-duration:v2
+```
+
 Mounting the model folder:
 
-```
+```sh
 docker run -it --rm \
     -p 8080:8080 \
     -e PREDICTIONS_STREAM_NAME="ride_predictions" \
     -e RUN_ID="Test123" \
     -e MODEL_LOCATION="/app/model" \
     -e TEST_RUN="True" \
-    -e AWS_DEFAULT_REGION="eu-west-1" \
+    -e AWS_DEFAULT_REGION="us-east-1" \
     -v $(pwd)/model:/app/model \
     stream-model-duration:v2
 ```
 
+```sh
+chmod +x integraton-test/run.sh
+```
+
 ### Specifying endpoint URL
 
+specific endpoint running in localstack
 ```bash
 aws --endpoint-url=http://localhost:4566 \
     kinesis list-streams
@@ -45,12 +62,37 @@ aws --endpoint-url=http://localhost:4566 \
 ```
 
 ```bash
+PREDICTIONS_STREAM_NAME="ride_predictions"
+SHARD='shardId-000000000000'
+
 aws  --endpoint-url=http://localhost:4566 \
     kinesis     get-shard-iterator \
     --shard-id ${SHARD} \
     --shard-iterator-type TRIM_HORIZON \
     --stream-name ${PREDICTIONS_STREAM_NAME} \
     --query 'ShardIterator'
+```
+
+```bash
+PREDICTIONS_STREAM_NAME='ride_predictions'
+SHARD='shardId-000000000000'
+
+SHARD_ITERATOR=$(aws --endpoint-url=http://localhost:4566 \
+    kinesis \
+    get-shard-iterator \
+    --shard-id ${SHARD} \
+    --shard-iterator-type TRIM_HORIZON \
+    --stream-name ${PREDICTIONS_STREAM_NAME} \
+    --query 'ShardIterator' \
+    --profile testelocal
+)
+
+RESULT=$(aws --endpoint-url=http://localhost:4566 \
+        kinesis \
+        get-records --shard-iterator $SHARD_ITERATOR \
+        --profile testelocal)
+
+echo ${RESULT} | jq -r '.Records[0].Data' | base64 --decode
 ```
 
 ### Unable to locate credentials

@@ -9,11 +9,31 @@ from sklearn.metrics import mean_squared_error
 import mlflow
 import xgboost as xgb
 from prefect import flow, task
+from prefect.artifacts import create_markdown_artifact
+import os.path
+from datetime import date
+from prefect_email import EmailServerCredentials, email_send_message
+from typing import List
 
 
-@task(retries=3, retry_delay_seconds=2)
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR = os.path.join(ROOT_DIR, 'data_pref')
+
+@task
+def example_email_send_message_flow(email_addresses: List[str]):
+    # get credentials in personal block
+    email_server_credentials = EmailServerCredentials.load("email")
+    for email_address in email_addresses:
+        subject = email_send_message.with_options(name=f"email {email_address}").submit(
+            email_server_credentials=email_server_credentials,
+            subject="Example Flow Notification using Gmail",
+            msg="This proves email_send_message works!",
+            email_to=email_address,
+        )
+
+@task(retries=3, retry_delay_seconds=2, name="Read taxi data")
 def read_data(filename: str) -> pd.DataFrame:
-    """Read data into DataFrame"""
+    """Read data into DataFrame"""   
     df = pd.read_parquet(filename)
 
     df.lpep_dropoff_datetime = pd.to_datetime(df.lpep_dropoff_datetime)
@@ -106,13 +126,31 @@ def train_best_model(
         mlflow.log_artifact("models/preprocessor.b", artifact_path="preprocessor")
 
         mlflow.xgboost.log_model(booster, artifact_path="models_mlflow")
+
+        markdown__rmse_report = f"""
+        # RMSE Report
+
+        ## Summary
+
+        Duration Prediction 
+
+        ## RMSE XGBoost Model
+
+        | Region    | RMSE |
+        |:----------|-------:|
+        | {date.today()} | {rmse:.2f} |
+        """
+
+        create_markdown_artifact(
+            key="duration-model-report", markdown=markdown__rmse_report
+        )
     return None
 
 
 @flow
 def main_flow(
-    train_path: str = "./data/green_tripdata_2021-01.parquet",
-    val_path: str = "./data/green_tripdata_2021-02.parquet",
+    train_path: str = os.path.join(DATA_DIR, "green_tripdata_2021-01.parquet"),
+    val_path: str = os.path.join(DATA_DIR, "green_tripdata_2021-02.parquet"),
 ) -> None:
     """The main training pipeline"""
 
@@ -129,6 +167,9 @@ def main_flow(
 
     # Train
     train_best_model(X_train, X_val, y_train, y_val, dv)
+
+    # send email
+    # example_email_send_message_flow(['insert email list'])
 
 
 if __name__ == "__main__":

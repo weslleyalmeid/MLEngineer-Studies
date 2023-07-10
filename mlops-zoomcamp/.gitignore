@@ -3,9 +3,16 @@ data/
 .bin
 *.db
 
+
+
 *.parquet
 *.html
 *.csv
+
+!/03-orchestration/3.4/data_pref/green_tripdata_2021-01.parquet
+!/03-orchestration/3.4/data_pref/green_tripdata_2021-02.parquet
+!/03-orchestration/3.4/data_pref/*.parquet
+
 
 .venv
 venv
@@ -22,3 +29,7 @@ __pycache__/
 
 .DS_Store
 wandb/
+
+.secrets
+**/.secrets
+/**/data/
