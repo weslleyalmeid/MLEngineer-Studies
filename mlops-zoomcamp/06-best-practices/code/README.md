@@ -138,12 +138,10 @@ black .
 ```
 
 #### Isort
-
 ```sh
 # check differences
 isort --diff . | less
 ```
-
 
 ### Make
 
