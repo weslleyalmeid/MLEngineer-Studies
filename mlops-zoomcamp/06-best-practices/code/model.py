@@ -1,12 +1,15 @@
 import os
 import json
 import base64
-import logging 
 
+import logging
 import boto3
 import mlflow
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s]: %(message)s")
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s]: %(message)s",
+)
 
 
 def get_model_location(run_id):
@@ -100,7 +103,6 @@ class KinesisCallback:
 
 def create_kinesis_client():
     endpoint_url = os.getenv('KINESIS_ENDPOINT_URL')
- 
     if endpoint_url is None:
         return boto3.client('kinesis')
 
@@ -118,5 +120,4 @@ def init(prediction_stream_name: str, run_id: str, test_run: bool):
         callbacks.append(kinesis_callback.put_record)
 
     model_service = ModelService(model=model, model_version=run_id, callbacks=callbacks)
-
     return model_service
