@@ -1,10 +1,10 @@
 import os
 import json
 import base64
+import logging 
 
 import boto3
 import mlflow
-import logging 
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s]: %(message)s")
 
@@ -100,7 +100,7 @@ class KinesisCallback:
 
 def create_kinesis_client():
     endpoint_url = os.getenv('KINESIS_ENDPOINT_URL')
-
+ 
     if endpoint_url is None:
         return boto3.client('kinesis')
 

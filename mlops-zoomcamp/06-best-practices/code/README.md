@@ -105,6 +105,22 @@ env variables to the `docker-compose.yaml` file:
 - AWS_SECRET_ACCESS_KEY=xyz
 ```
 
+### Linter
+
+The file pyproject.toml is responsible for interactions between linter and global documents.
+
+```sh
+touch pyproject.toml
+```
+
+Other format of insert linter in localfile is this, specific pylint with comment
+```py
+def lambda_handler(event, context):
+    # pylint: disable=unused-argument
+    return model_service.lambda_handler(event)
+```
+
+
 ### Make
 
 Without make:
